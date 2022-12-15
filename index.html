@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line-Art🖍</title>
+    <link rel="shortcut icon" href="dibujando-ando.png" type="image/x-icon">
+    <style>
+        body {
+            text-align: center;
+            background-image: url(https://st2.depositphotos.com/2021995/9326/v/450/depositphotos_93266722-stock-illustration-colored-pencils-border-background-illustration.jpg);
+            background-size: cover;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        canvas {
+            background-color: whitesmoke;
+            border: ridge burlywood 10px;
+            margin-top: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mi primer lienzo</h1>
+
+    <input type="color" id="color" placeholder="color">
+    <input type="number" id="ancho" placeholder="ancho">
+    <button onclick="limpiar()">Limpiar lienzo</button>
+    <br>
+    <canvas id="lienzo" width="1200" height="250"></canvas>
+    <script>
+        var canvas = document.getElementById("lienzo");
+        var pen = canvas.getContext("2d");
+
+        //canvas.addEventListener("mousedown", dibujar);
+        function dibujar(e) {
+            var x = e.clientX - canvas.offsetLeft;
+            var y = e.clientY - canvas.offsetTop;
+            console.log("X = " + x + " ,Y =  " + y);
+            pen.strokeStyle = document.getElementById("color").value;
+            pen.lineWidth = 2;
+            pen.beginPath();
+            pen.arc(x, y, 50, 0, 2 * Math.PI);
+            pen.stroke();
+        }
+
+        function limpiar() {
+            pen.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        var dibujando = 0;
+        var xInicial = 0
+        var yInicial = 0;
+        var xFinal = 0;
+        var yFinal = 0;
+
+        canvas, addEventListener("mousedown", function () {
+            color = document.getElementById("color").value;
+            ancho = document.getElementById("ancho").value;
+            dibujando = 1;
+        });
+
+
+        canvas.addEventListener("mousemove", dibujarLinea)
+
+        function dibujarLinea(e) {
+            xInicial = e.clientX - canvas.offsetLeft;
+            yInicial = e.clientY - canvas.offsetTop;
+            if (dibujando) {
+                pen.strokeStyle = color;
+                pen.lineWidth = ancho;
+                pen.beginPath();
+                pen.moveTo(xFinal, yFinal);
+                pen.lineTo(xInicial, yInicial);
+                pen.stroke();
+            }
+            xFinal = xInicial;
+            yFinal = yInicial;
+        }
+
+        canvas.addEventListener("mouseup", function () { dibujando = 0; });
+        canvas.addEventListener("mouseleave", function () { dibujando = 0; });
+        canvas.addEventListener("touchstart", vas)
+        canvas.addEventListener("touchmove", ando)
+        function vas(e) {
+            color = document.getElementById("color").value;
+            ancho = document.getElementById("ancho").value;
+            xFinal = e.touches[0].clientX - canvas.offsetLeft;
+            yFinal = e.touches[0].clientY - canvas.offsetTop;
+        }
+        function ando(e) {
+            xInicial = e.touches[0].clientX - canvas.offsetLeft;
+            yInicial = e.touches[0].clientY - canvas.offsetTop;
+            pen.strokeStyle = color;
+            pen.lineWidth = ancho;
+            pen.beginPath();
+            pen.moveTo(xFinal, yFinal);
+            pen.lineTo(xInicial, yInicial);
+            pen.stroke();
+
+            xFinal = xInicial;
+            yFinal = yInicial;
+        }
+        if (screen.width < 992) {
+            canvas.width = screen.width - 150;
+            canvas.height = screen.height - 120;
+            canvas.style.overflow = "hidden";
+        }
+    </script>
+
+</body>
+
+</html>
